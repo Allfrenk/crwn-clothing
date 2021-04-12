@@ -3,7 +3,7 @@ import React from "react";
 import "./sign-in.style.scss";
 import CustonButton from "../custom-button/custom-button.component";
 
-import { signInWithGoogle } from "../../firebase/firebese.utils.js";
+import { auth, signInWithGoogle } from "../../firebase/firebese.utils.js";
 
 import FormInput from "../form-input/form-input.component";
 
@@ -17,10 +17,17 @@ class SignIn extends React.Component {
     };
   }
 
-  handleSubmit = (e) => {
-    e.preventDefault();
+  handleSubmit = async (event) => {
+    event.preventDefault();
 
-    this.setState({ email: "", password: "" });
+    const { email, password } = this.state;
+
+    try {
+      await auth.signInWithEmailAndPassword(email, password);
+      this.setState({ email: "", password: "" });
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   handleChange = (e) => {
@@ -44,7 +51,6 @@ class SignIn extends React.Component {
             label="email"
             required
           />
-
           <FormInput
             name="password"
             type="password"
@@ -55,9 +61,12 @@ class SignIn extends React.Component {
           />
           <div className="buttons">
             <CustonButton type="submit">SIGN IN</CustonButton>
-            <CustonButton onClick={signInWithGoogle} isGoogleSignIn="true">
-              {" "}
-              Sign in with Google{" "}
+            <CustonButton
+              type="button"
+              onClick={signInWithGoogle}
+              isGoogleSignIn="true"
+            >
+              Sign in with Google
             </CustonButton>
           </div>
         </form>
