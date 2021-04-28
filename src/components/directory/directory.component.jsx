@@ -5,12 +5,13 @@ import { createStructuredSelector } from "reselect";
 import { selectDirectorySections } from "../../redux/directory/directory.selector";
 
 import MenuItem from "../menu-item/menu-item.component.jsx";
+import { DirectoryMenu } from "./directory.style";
 
-import "./directory.style.scss";
+///////////////////////////////////////////////////////////////////////
 
 const Directory = ({ sections }) => {
   return (
-    <div className="directory-menu">
+    <DirectoryMenu>
       {sections.map(({ title, imageUrl, id, size, linkUrl }) => (
         // {id, ...otherSectionProps} spread operator
         // <MenuItem key={id} {...otherSectionProps} />
@@ -22,7 +23,7 @@ const Directory = ({ sections }) => {
           linkUrl={linkUrl}
         />
       ))}
-    </div>
+    </DirectoryMenu>
   );
 };
 

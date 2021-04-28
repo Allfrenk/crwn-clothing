@@ -12,6 +12,7 @@ import CheckoutPage from "./pages/checkout/checkout.component.jsx";
 
 import SignInandSignUp from "./pages/sign-in-sign-up/sign-in-sign-up.component.jsx";
 import { auth, createUserProfileDocument } from "./firebase/firebese.utils";
+
 import { setCurrentUser } from "./redux/user/user.action";
 import { selectCurrentUser } from "./redux/user/user.selectors";
 

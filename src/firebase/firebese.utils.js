@@ -13,6 +13,8 @@ const config = {
   measurementId: "G-2RT5G075BL",
 };
 
+/////////////////////////////////////////////////////////////////////////////
+
 export const createUserProfileDocument = async (userAuth, additionalData) => {
   if (!userAuth) return;
 
@@ -38,6 +40,22 @@ export const createUserProfileDocument = async (userAuth, additionalData) => {
 
   return userRef;
 };
+
+// CREA NUOVI COLLECTIONS AND DOCUMENTS QUANDO LA CHIAMI
+
+export const addCollectionAndDocuments = async (collectionKey, objectToAdd) => {
+  const collectionRef = firestore.collection(collectionKey);
+
+  const batch = firestore.batch();
+  objectToAdd.forEach((obj) => {
+    const newDocRef = collectionRef.doc();
+    batch.set(newDocRef, obj);
+  });
+
+  return await batch.commit();
+};
+
+// --------------------------------
 
 firebase.initializeApp(config);
 
