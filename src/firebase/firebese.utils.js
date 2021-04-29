@@ -13,6 +13,7 @@ const config = {
   measurementId: "G-2RT5G075BL",
 };
 
+firebase.initializeApp(config);
 /////////////////////////////////////////////////////////////////////////////
 
 export const createUserProfileDocument = async (userAuth, additionalData) => {
@@ -55,9 +56,24 @@ export const addCollectionAndDocuments = async (collectionKey, objectToAdd) => {
   return await batch.commit();
 };
 
-// --------------------------------
+export const convertCollectionSnapshotToMap = (collections) => {
+  const transformedCollection = collections.docs.map((doc) => {
+    const { title, items } = doc.data();
 
-firebase.initializeApp(config);
+    return {
+      routeName: encodeURI(title.toLowerCase()),
+      id: doc.id,
+      title,
+      items,
+    };
+  });
+
+  return transformedCollection.reduce((accumulator, collection) => {
+    accumulator[collection.title.toLowerCase()] = collection;
+    return accumulator;
+  }, {});
+};
+// --------------------------------
 
 export const auth = firebase.auth();
 export const firestore = firebase.firestore();
