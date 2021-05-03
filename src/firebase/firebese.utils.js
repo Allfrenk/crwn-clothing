@@ -12,14 +12,20 @@ const config = {
   appId: "1:154214941592:web:d9ef9fd2f70bce88e1a1ed",
   measurementId: "G-2RT5G075BL",
 };
-
+//////////////////////////////////////////////////////////////////////
 firebase.initializeApp(config);
+
+export const auth = firebase.auth();
+export const firestore = firebase.firestore();
+
+export default firebase;
 /////////////////////////////////////////////////////////////////////////////
 
 export const createUserProfileDocument = async (userAuth, additionalData) => {
   if (!userAuth) return;
 
   const userRef = firestore.doc(`users/${userAuth.uid}`);
+  console.log(userRef);
 
   const snapShot = await userRef.get();
 
@@ -42,10 +48,10 @@ export const createUserProfileDocument = async (userAuth, additionalData) => {
   return userRef;
 };
 
-// CREA NUOVI COLLECTIONS AND DOCUMENTS QUANDO LA CHIAMI
-
+// CREA NUOVI COLLECTIONS DANDO IL NOME E GLI OGGETTI DA AGIGUNGERE
 export const addCollectionAndDocuments = async (collectionKey, objectToAdd) => {
   const collectionRef = firestore.collection(collectionKey);
+  console.log(collectionRef);
 
   const batch = firestore.batch();
   objectToAdd.forEach((obj) => {
@@ -56,6 +62,7 @@ export const addCollectionAndDocuments = async (collectionKey, objectToAdd) => {
   return await batch.commit();
 };
 
+// SERVE PER CONVERTIRE IN OGGETTO LO SNAPSHOT
 export const convertCollectionSnapshotToMap = (collections) => {
   const transformedCollection = collections.docs.map((doc) => {
     const { title, items } = doc.data();
@@ -67,6 +74,7 @@ export const convertCollectionSnapshotToMap = (collections) => {
       items,
     };
   });
+  // console.log(transformedCollection);
 
   return transformedCollection.reduce((accumulator, collection) => {
     accumulator[collection.title.toLowerCase()] = collection;
@@ -75,12 +83,7 @@ export const convertCollectionSnapshotToMap = (collections) => {
 };
 // --------------------------------
 
-export const auth = firebase.auth();
-export const firestore = firebase.firestore();
-
 const provider = new firebase.auth.GoogleAuthProvider();
 provider.setCustomParameters({ prompt: "select_account" });
 
 export const signInWithGoogle = () => auth.signInWithPopup(provider);
-
-export default firebase;

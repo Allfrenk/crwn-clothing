@@ -5,14 +5,14 @@ import CollectionsOverview from "../../components/collection-overview/collection
 import CollectionPage from "../collection/collection.component";
 
 import { connect } from "react-redux";
-import { updateCollections } from "../../redux/shop/shop.action";
-
-import WithSpinner from "../../components/with-spinner/with-spinner.component";
 
 import {
   firestore,
   convertCollectionSnapshotToMap,
 } from "../../firebase/firebese.utils.js";
+
+import { updateCollections } from "../../redux/shop/shop.action";
+import WithSpinner from "../../components/with-spinner/with-spinner.component";
 
 ///////////////////////////////////////////////////////////////////////////////////
 
@@ -20,29 +20,32 @@ const CollectionOverviewWithSpinner = WithSpinner(CollectionsOverview);
 const CollectionPageWithSpinner = WithSpinner(CollectionPage);
 
 class ShopPage extends React.Component {
-  // è come scrivere constructor() ee super() e settare this.state
   state = {
     loading: true,
   };
   unsubscribeFromSnapshot = null;
 
-  conponentDidMount() {
+  componentDidMount() {
     const { updateCollections } = this.props;
-    const collectionRef = firestore.collection("collections"); // collections è nomea utilizza su firestore
+    const collectionRef = firestore.collection("collections");
 
-    collectionRef.get().then((snapshot) => {
+    // fetch(
+    //   "https://firestore.googleapis.com/v1/projects/crwn-db-allfrenk/databases/(default)/documents/collections"
+    // )
+    //   .then((response) => response.json)
+    //   .then((collections) => console.log(collections));
+
+    // collectionRef.get().then((snapshot) => {
+    //   const collectionsMap = convertCollectionSnapshotToMap(snapshot);
+    //   updateCollections(collectionsMap);
+    //   this.setState({ loading: false });
+    // });
+
+    collectionRef.onSnapshot(async (snapshot) => {
       const collectionsMap = convertCollectionSnapshotToMap(snapshot);
       updateCollections(collectionsMap);
       this.setState({ loading: false });
     });
-
-    // this.unsubscribeFromSnapshot = collectionRef.onSnapshot(
-    //   async (snapshot) => {
-    //     const collectionsMap = convertCollectionSnapshotToMap(snapshot);
-    //     updateCollections(collectionsMap);
-    //     this.setState({ loading: false });
-    //   }
-    // );
   }
 
   render() {
